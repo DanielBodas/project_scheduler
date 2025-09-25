@@ -1,5 +1,5 @@
 # scheduler.py
-from models import Person
+from src.models import Person
 from datetime import datetime, timedelta
 
 class Scheduler:

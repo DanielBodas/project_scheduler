@@ -1,6 +1,6 @@
 # process_manager.py
 import yaml
-from models import Task, Process
+from src.models import Task, Process
 from collections import defaultdict
 
 def load_config(path):
