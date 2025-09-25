@@ -1,0 +1,55 @@
+start_day: 2025-09-25T09:00:00
+
+process_templates:
+  tipo1:
+    - name: "cargar_reparaciones"
+      duration: 3
+      type: manual
+      priority: 1
+      dependencies: ["entrega_reparaciones"]
+    - name: "procesar_reparaciones"
+      duration: 5
+      type: automated
+      server: S2
+      priority: 2
+      dependencies: ["cargar_reparaciones"]
+    - name: "validar_reparaciones"
+      duration: 2
+      type: manual
+      priority: 2
+      dependencies: ["procesar_reparaciones"]
+
+  tipo2:
+    - name: "generar_informe"
+      duration: 2
+      type: automated
+      # no server -> puede ejecutarse en paralelo (System)
+      priority: 3
+      dependencies: ["tipo1"]  # depende del proceso/template tipo1 (última tarea)
+
+clients:
+  - name: Cliente A
+    processes_order:
+      - tipo1
+      - tipo2
+
+  - name: Cliente B
+    processes_order:
+      - tipo1
+
+milestones:
+  - name: entrega_reparaciones
+    start_after: 24  # ejemplo en YAML, si tu parser YAML no admite expresiones, usa 120
+    # si el parser no evalúa 5*24, pon 120
+
+global_tasks:
+  - name: inicio_urgente
+    type: manual
+    duration: 2
+    priority: 1
+    dependencies: []
+
+  # global como plantilla
+  - name: inicio_global_tipo1
+    template: tipo1
+    dependencies: []

@@ -1,0 +1,32 @@
+start_day: 2025-09-25T09:00:00
+
+process_templates:
+  calculo_structure_process:
+    - name: "descarga_fuentes"
+      duration: 3
+      type: manual
+      priority: 1
+      dependencies: []
+  lanzamiento_calculo:
+    - name: "preparacion_informacion"
+      duration: 2
+      type: manual
+      dependencies: ["calculo_structure"]  # depende del proceso/template tipo1 (última tarea)
+    - name: "lanzar_calculo"
+      duration: 5
+      type: automated
+      server: S1
+      priority: 2
+      dependencies: ["preparacion_informacion"] 
+
+clients:
+  - name: Cliente A
+    processes_order:
+      - calculo_structure_process
+      - lanzamiento_calculo
+
+global_tasks:
+  # global como plantilla
+  - name: calculo_structure
+    template: calculo_structure_process
+    dependencies: []
